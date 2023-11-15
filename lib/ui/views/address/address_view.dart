@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 
+import '../../../data_model/country.dart';
 import 'address_view.form.dart';
 import 'address_viewmodel.dart';
+import 'widgets/country_tile.dart';
 import 'widgets/primary_button.dart';
 
 @FormView(
   fields: [
-    FormTextField(name: 'country'),
     FormTextField(name: 'prefecture'),
     FormTextField(name: 'municipality'),
     FormTextField(name: 'street'),
@@ -73,15 +74,44 @@ class AddressView extends StackedView<AddressViewModel> with $AddressView {
                   right: 20,
                 ),
                 children: [
-                  TextFormField(
-                    controller: countryController,
-                    focusNode: countryFocusNode,
-                    readOnly: true,
-                    onTap: viewModel.triggerCountrySheet,
-                    decoration: const InputDecoration(
-                      hintText: 'Country',
-                      suffixIcon: Icon(Icons.search),
-                    ),
+                  Autocomplete<Country>(
+                    fieldViewBuilder: (
+                      BuildContext context,
+                      TextEditingController controller,
+                      FocusNode focusNode,
+                      VoidCallback onFieldSubmitted,
+                    ) {
+                      return TextFormField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        decoration: const InputDecoration(
+                          hintText: 'Country',
+                          suffixIcon: Icon(Icons.search),
+                        ),
+                        onFieldSubmitted: (value) {
+                          onFieldSubmitted();
+                        },
+                      );
+                    },
+                    optionsBuilder: (TextEditingValue textEditingValue) async {
+                      return await viewModel.search(textEditingValue.text);
+                    },
+                    displayStringForOption: (option) => option.name ?? '--',
+                    optionsViewBuilder: (context, onSelected, options) {
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          Country country = options.elementAt(index);
+                          return CountryTile(
+                            country: country,
+                            onTap: () {
+                              onSelected(country);
+                            },
+                          );
+                        },
+                        itemCount: options.length,
+                      );
+                    },
+                    onSelected: viewModel.setSelectedCountry,
                   ),
                   const SizedBox(
                     height: 10,

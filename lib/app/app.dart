@@ -4,6 +4,7 @@ import 'package:giga_bank_test/ui/views/startup/startup_view.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:giga_bank_test/ui/views/address/address_view.dart';
+import 'package:giga_bank_test/services/json_resource_service.dart';
 // @stacked-import
 
 @StackedApp(
@@ -16,7 +17,8 @@ import 'package:giga_bank_test/ui/views/address/address_view.dart';
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: DialogService),
     LazySingleton(classType: NavigationService),
-    // @stacked-service
+    LazySingleton(classType: JsonResourceService),
+// @stacked-service
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),
@@ -26,5 +28,6 @@ import 'package:giga_bank_test/ui/views/address/address_view.dart';
     StackedDialog(classType: InfoAlertDialog),
     // @stacked-dialog
   ],
+  logger: StackedLogger(),
 )
 class App {}
