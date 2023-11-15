@@ -11,7 +11,6 @@ import 'package:stacked/stacked.dart';
 
 const bool _autoTextFieldValidation = true;
 
-const String CountryValueKey = 'country';
 const String PrefectureValueKey = 'prefecture';
 const String MunicipalityValueKey = 'municipality';
 const String StreetValueKey = 'street';
@@ -23,7 +22,6 @@ final Map<String, TextEditingController> _AddressViewTextEditingControllers =
 final Map<String, FocusNode> _AddressViewFocusNodes = {};
 
 final Map<String, String? Function(String?)?> _AddressViewTextValidations = {
-  CountryValueKey: null,
   PrefectureValueKey: null,
   MunicipalityValueKey: null,
   StreetValueKey: null,
@@ -31,8 +29,6 @@ final Map<String, String? Function(String?)?> _AddressViewTextValidations = {
 };
 
 mixin $AddressView {
-  TextEditingController get countryController =>
-      _getFormTextEditingController(CountryValueKey);
   TextEditingController get prefectureController =>
       _getFormTextEditingController(PrefectureValueKey);
   TextEditingController get municipalityController =>
@@ -42,7 +38,6 @@ mixin $AddressView {
   TextEditingController get apartmentController =>
       _getFormTextEditingController(ApartmentValueKey);
 
-  FocusNode get countryFocusNode => _getFormFocusNode(CountryValueKey);
   FocusNode get prefectureFocusNode => _getFormFocusNode(PrefectureValueKey);
   FocusNode get municipalityFocusNode =>
       _getFormFocusNode(MunicipalityValueKey);
@@ -73,7 +68,6 @@ mixin $AddressView {
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values
   void syncFormWithViewModel(FormStateHelper model) {
-    countryController.addListener(() => _updateFormData(model));
     prefectureController.addListener(() => _updateFormData(model));
     municipalityController.addListener(() => _updateFormData(model));
     streetController.addListener(() => _updateFormData(model));
@@ -89,7 +83,6 @@ mixin $AddressView {
     'This feature was deprecated after 3.1.0.',
   )
   void listenToFormUpdated(FormViewModel model) {
-    countryController.addListener(() => _updateFormData(model));
     prefectureController.addListener(() => _updateFormData(model));
     municipalityController.addListener(() => _updateFormData(model));
     streetController.addListener(() => _updateFormData(model));
@@ -103,7 +96,6 @@ mixin $AddressView {
     model.setData(
       model.formValueMap
         ..addAll({
-          CountryValueKey: countryController.text,
           PrefectureValueKey: prefectureController.text,
           MunicipalityValueKey: municipalityController.text,
           StreetValueKey: streetController.text,
@@ -149,23 +141,12 @@ extension ValueProperties on FormStateHelper {
     return !hasAnyValidationMessage;
   }
 
-  String? get countryValue => this.formValueMap[CountryValueKey] as String?;
   String? get prefectureValue =>
       this.formValueMap[PrefectureValueKey] as String?;
   String? get municipalityValue =>
       this.formValueMap[MunicipalityValueKey] as String?;
   String? get streetValue => this.formValueMap[StreetValueKey] as String?;
   String? get apartmentValue => this.formValueMap[ApartmentValueKey] as String?;
-
-  set countryValue(String? value) {
-    this.setData(
-      this.formValueMap..addAll({CountryValueKey: value}),
-    );
-
-    if (_AddressViewTextEditingControllers.containsKey(CountryValueKey)) {
-      _AddressViewTextEditingControllers[CountryValueKey]?.text = value ?? '';
-    }
-  }
 
   set prefectureValue(String? value) {
     this.setData(
@@ -209,9 +190,6 @@ extension ValueProperties on FormStateHelper {
     }
   }
 
-  bool get hasCountry =>
-      this.formValueMap.containsKey(CountryValueKey) &&
-      (countryValue?.isNotEmpty ?? false);
   bool get hasPrefecture =>
       this.formValueMap.containsKey(PrefectureValueKey) &&
       (prefectureValue?.isNotEmpty ?? false);
@@ -225,8 +203,6 @@ extension ValueProperties on FormStateHelper {
       this.formValueMap.containsKey(ApartmentValueKey) &&
       (apartmentValue?.isNotEmpty ?? false);
 
-  bool get hasCountryValidationMessage =>
-      this.fieldsValidationMessages[CountryValueKey]?.isNotEmpty ?? false;
   bool get hasPrefectureValidationMessage =>
       this.fieldsValidationMessages[PrefectureValueKey]?.isNotEmpty ?? false;
   bool get hasMunicipalityValidationMessage =>
@@ -236,8 +212,6 @@ extension ValueProperties on FormStateHelper {
   bool get hasApartmentValidationMessage =>
       this.fieldsValidationMessages[ApartmentValueKey]?.isNotEmpty ?? false;
 
-  String? get countryValidationMessage =>
-      this.fieldsValidationMessages[CountryValueKey];
   String? get prefectureValidationMessage =>
       this.fieldsValidationMessages[PrefectureValueKey];
   String? get municipalityValidationMessage =>
@@ -249,8 +223,6 @@ extension ValueProperties on FormStateHelper {
 }
 
 extension Methods on FormStateHelper {
-  setCountryValidationMessage(String? validationMessage) =>
-      this.fieldsValidationMessages[CountryValueKey] = validationMessage;
   setPrefectureValidationMessage(String? validationMessage) =>
       this.fieldsValidationMessages[PrefectureValueKey] = validationMessage;
   setMunicipalityValidationMessage(String? validationMessage) =>
@@ -262,7 +234,6 @@ extension Methods on FormStateHelper {
 
   /// Clears text input fields on the Form
   void clearForm() {
-    countryValue = '';
     prefectureValue = '';
     municipalityValue = '';
     streetValue = '';
@@ -272,7 +243,6 @@ extension Methods on FormStateHelper {
   /// Validates text input fields on the Form
   void validateForm() {
     this.setValidationMessages({
-      CountryValueKey: getValidationMessage(CountryValueKey),
       PrefectureValueKey: getValidationMessage(PrefectureValueKey),
       MunicipalityValueKey: getValidationMessage(MunicipalityValueKey),
       StreetValueKey: getValidationMessage(StreetValueKey),
@@ -296,7 +266,6 @@ String? getValidationMessage(String key) {
 /// Updates the fieldsValidationMessages on the FormViewModel
 void updateValidationData(FormStateHelper model) =>
     model.setValidationMessages({
-      CountryValueKey: getValidationMessage(CountryValueKey),
       PrefectureValueKey: getValidationMessage(PrefectureValueKey),
       MunicipalityValueKey: getValidationMessage(MunicipalityValueKey),
       StreetValueKey: getValidationMessage(StreetValueKey),
