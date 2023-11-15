@@ -4,6 +4,7 @@ import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
 import '../../../data_model/country.dart';
 import '../../../services/json_resource_service.dart';
+import '../../common/string_util.dart';
 
 class AddressViewModel extends FutureViewModel<List<Country>?>
     with FormStateHelper
@@ -36,14 +37,14 @@ class AddressViewModel extends FutureViewModel<List<Country>?>
   }
 
   Future<Iterable<Country>> search(String? query) async {
-    if (query == null && query!.isEmpty) {
+    if (StringUtil.isEmpty(query)) {
       return const Iterable<Country>.empty();
     }
 
     final List<Country> searchList = List.from(_memoryList);
 
     return searchList.where((Country country) {
-      return country.name!.toLowerCase().contains(query.toLowerCase());
+      return country.name!.toLowerCase().contains(query!.toLowerCase());
     });
   }
 
