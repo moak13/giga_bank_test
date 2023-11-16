@@ -4,6 +4,7 @@ import 'package:stacked/stacked_annotations.dart';
 
 import '../../../data_model/country.dart';
 import '../../../utils/custom_input_formatter.dart';
+import '../../common/string_util.dart';
 import '../../common/validator.dart';
 import 'address_view.form.dart';
 import 'address_viewmodel.dart';
@@ -77,6 +78,9 @@ class AddressView extends StackedView<AddressViewModel> with $AddressView {
                 ),
                 children: [
                   Autocomplete<Country>(
+                    initialValue: TextEditingValue(
+                      text: viewModel.country?.name ?? '',
+                    ),
                     fieldViewBuilder: (
                       BuildContext context,
                       TextEditingController controller,
@@ -92,6 +96,9 @@ class AddressView extends StackedView<AddressViewModel> with $AddressView {
                         ),
                         onFieldSubmitted: (value) {
                           onFieldSubmitted();
+                          if (StringUtil.isNotEmpty(value)) {
+                            prefectureFocusNode.requestFocus();
+                          }
                         },
                         validator: (value) => Validator.validateField(
                           value,
@@ -132,6 +139,11 @@ class AddressView extends StackedView<AddressViewModel> with $AddressView {
                       value,
                       error: 'required',
                     ),
+                    onFieldSubmitted: (value) {
+                      if (StringUtil.isNotEmpty(value)) {
+                        municipalityFocusNode.requestFocus();
+                      }
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -146,6 +158,11 @@ class AddressView extends StackedView<AddressViewModel> with $AddressView {
                       value,
                       error: 'required',
                     ),
+                    onFieldSubmitted: (value) {
+                      if (StringUtil.isNotEmpty(value)) {
+                        streetFocusNode.requestFocus();
+                      }
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -160,6 +177,11 @@ class AddressView extends StackedView<AddressViewModel> with $AddressView {
                     inputFormatters: [
                       DashInputFormatter(),
                     ],
+                    onFieldSubmitted: (value) {
+                      if (StringUtil.isNotEmpty(value)) {
+                        apartmentFocusNode.requestFocus();
+                      }
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -188,7 +210,7 @@ class AddressView extends StackedView<AddressViewModel> with $AddressView {
               ),
               child: PrimaryButton(
                 text: 'Next',
-                // isDisabled: true,
+                isDisabled: viewModel.isValidForm,
                 isBusy: viewModel.isBusy,
                 onTap: () {
                   if (_formKey.currentState?.validate() ?? false) {
